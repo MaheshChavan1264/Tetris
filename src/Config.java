@@ -81,7 +81,7 @@ public class Config {
     }
 
     public static void loadConfig() throws Exception{
-        File directory = new File(getDefaultDirectory(),"/Tetris");
+        File directory = new File(System.getProperty("os.name"),"/tetris");
         if(!directory.exists()){
             directory.mkdirs();
         }
@@ -106,6 +106,7 @@ public class Config {
             saveConfig();
             return;
         }
+        /*
         if(!values.containsKey("left") || !values.containsKey("right") || !values.containsKey("rotate") || !values.containsKey("down") || !values.containsKey("pause")){
             System.out.println("Invalid names in config, saving defaults");
             saveConfig();
@@ -119,7 +120,7 @@ public class Config {
         if(getKeyNames().contains(left) && getKeyNames().contains(right) && getKeyNames().contains(rotate) && getKeyNames().contains(down) && getKeyNames().contains(pause)) {
             System.out.println("Invalid key in config, saving defaults");
             return;
-        }
+        }*/
         Config.left = left;
         Config.right = right;
         Config.rotate = rotate;
@@ -127,7 +128,7 @@ public class Config {
         Config.pause = pause;
     }
     public static void saveConfig() throws IOException {
-        File directory = new File(getDefaultDirectory(),"/Tetris");
+        File directory = new File(System.getProperty("os.name"),"/tetris");
         if(!directory.exists()){
             directory.mkdirs();
         }
@@ -140,18 +141,6 @@ public class Config {
         pw.println("pause:" + pause);
         pw.close();
     }
-    public static String getDefaultDirectory(){
-        String OS = System.getProperty("os.name");
-        if(OS.contains("WIN"))
-            return System.getenv("APPDATA");
-        else if(OS.contains("MAC"))
-            return System.getProperty("user.home") + ("Library/Application Support"
-            + "Support");
-        else if(OS.contains("NUX"))
-            return System.getProperty("user.home");
-        return System.getProperty("user.home");
-    }
-
 
     public static ArrayList<String> getKeyNames() {
         ArrayList<String> result = new ArrayList<String>();

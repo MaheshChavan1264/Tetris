@@ -9,10 +9,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
+import java.io.IOException;
 
 public class TetrisMain extends Canvas implements Runnable, KeyListener {
 
     public static final int WIDTH = 400, HEIGHT = 565;
+    private Image[] tetrisBlocks;
 
     public static void main(String[] args) {
         final JFrame frame = new JFrame("Tetris");
@@ -117,6 +119,7 @@ public class TetrisMain extends Canvas implements Runnable, KeyListener {
     }
 
     public void run() {
+        init();
         boolean running = true;
         while (running) {
             update();
@@ -130,6 +133,16 @@ public class TetrisMain extends Canvas implements Runnable, KeyListener {
             buf.show();
         }
     }
+    public void init(){
+        requestFocus();
+        try {
+            tetrisBlocks = ImageLoader.loadImage("/res/tetris.png",25);
+        }
+        catch ( IOException e){
+            System.out.println("Error loading in tetris.png");
+            System.exit(0);
+        }
+    }
 
     public void render(Graphics2D g) {
         g.setColor(Color.BLACK);
@@ -137,7 +150,7 @@ public class TetrisMain extends Canvas implements Runnable, KeyListener {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Calibri", Font.PLAIN, 20));
         g.drawString("Tetris", 170, 50);
-
+        g.drawImage(tetrisBlocks[0],100,100,25,25,null);
     }
 
     public void update() {
