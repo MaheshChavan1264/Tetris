@@ -1,30 +1,40 @@
 import com.sun.source.doctree.TextTree;
 
+import javax.management.JMException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 
-public class TetrisMain extends Canvas implements Runnable, KeyListener  {
+public class TetrisMain extends Canvas implements Runnable, KeyListener {
 
     public static final int WIDTH = 400, HEIGHT = 565;
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Tetris");
-        frame.setSize(WIDTH,HEIGHT);
+        final JFrame frame = new JFrame("Tetris");
+        frame.setSize(WIDTH, HEIGHT);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setLayout(null);
 
+        KeyGetter.loadKeys();
+        try{
+            Config.loadConfig();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
         JMenuBar bar = new JMenuBar();
-        bar.setBounds(0,0,WIDTH,25);
+        bar.setBounds(0, 0, WIDTH, 25);
 
         JMenu file = new JMenu("File");
-        file.setBounds(0,0,45,24);
+        file.setBounds(0, 0, 45, 24);
 
         JMenuItem newGame = new JMenuItem("New Game");
         newGame.addActionListener(new ActionListener() {
@@ -45,12 +55,13 @@ public class TetrisMain extends Canvas implements Runnable, KeyListener  {
                 alert.setSize(200, 150);
                 alert.setLayout(null);
                 alert.setLocationRelativeTo(null);
+                alert.setAlwaysOnTop(true);
 
-                JLabel score = new JLabel("The High Score is: "+ highscore);
-                score.setBounds(0,0,200,50);
+                JLabel score = new JLabel("The High Score is: " + highscore);
+                score.setBounds(0, 0, 200, 50);
 
                 JButton okayButton = new JButton("Okay");
-                okayButton.setBounds(50,50,100,30);
+                okayButton.setBounds(50, 50, 100, 30);
 
                 alert.add(score);
                 alert.add(okayButton);
@@ -76,12 +87,22 @@ public class TetrisMain extends Canvas implements Runnable, KeyListener  {
             }
         });
 
+        JMenuItem options = new JMenuItem("Options");
+        options.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Config.openConfig(frame);
+
+            }
+        });
+
         TetrisMain tm = new TetrisMain();
-        tm.setBounds(0,25,WIDTH,HEIGHT-25);
+        tm.setBounds(0, 25, WIDTH, HEIGHT - 25);
 
         frame.add(tm);
         file.add(newGame);
         file.add(highScore);
+        file.add(options);
         file.add(exit);
         bar.add(file);
         frame.add(bar);
@@ -89,18 +110,18 @@ public class TetrisMain extends Canvas implements Runnable, KeyListener  {
         tm.start();
     }
 
-    public void start(){
+    public void start() {
         Thread t = new Thread(this);
         t.setPriority(Thread.MAX_PRIORITY);
         t.start();
     }
 
-    public void run () {
+    public void run() {
         boolean running = true;
-        while (running){
+        while (running) {
             update();
             BufferStrategy buf = getBufferStrategy();
-            if(buf == null){
+            if (buf == null) {
                 createBufferStrategy(3);
                 continue;
             }
@@ -109,29 +130,30 @@ public class TetrisMain extends Canvas implements Runnable, KeyListener  {
             buf.show();
         }
     }
-    public void render(Graphics2D g){
+
+    public void render(Graphics2D g) {
         g.setColor(Color.BLACK);
-        g.fillRect(0,0,WIDTH,HEIGHT);
+        g.fillRect(0, 0, WIDTH, HEIGHT);
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Calibri",Font.PLAIN,20));
-        g.drawString("Tetris",170,50);
+        g.setFont(new Font("Calibri", Font.PLAIN, 20));
+        g.drawString("Tetris", 170, 50);
 
     }
 
-    public void update(){}
+    public void update() {
 
+    }
 
+    @Override
     public void keyTyped(KeyEvent e) {
 
-        }
+    }
 
-        public void keyPressed(KeyEvent e) {
-
-        }
-        public void keyReleased(KeyEvent e) {
-
-        }
+    public void keyPressed(KeyEvent e) {
 
     }
 
+    public void keyReleased(KeyEvent e) {
 
+    }
+}
